@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../projects/login/view.dart';
+import '../flag.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: Flag(),
     );
   }
 }
