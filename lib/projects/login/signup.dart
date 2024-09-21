@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_children_course/projects/login/signup.dart';
+import 'package:flutter_children_course/projects/login/view.dart';
 
-import 'forgotten_pass.dart';
-
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class SignupPage extends StatelessWidget {
+  const SignupPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +14,7 @@ class LoginPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "LOGIN",
+                "SIGN UP",
                 style: TextStyle(
                   fontSize: 60.0,
                   color: Colors.cyan,
@@ -32,6 +30,18 @@ class LoginPage extends StatelessWidget {
               ),
               const SizedBox(
                 height: 25.0,
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  hintText: 'User name',
+                  border: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.cyan),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20.0,
               ),
               TextFormField(
                 decoration: InputDecoration(
@@ -54,19 +64,6 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const ForgottenPassPage(),
-                      ),
-                    );
-                  },
-                  child: const Text("Forgotten the password?"),
-                ),
-              ),
               const SizedBox(
                 height: 35.0,
               ),
@@ -77,23 +74,23 @@ class LoginPage extends StatelessWidget {
                   minimumSize: const Size(300, 50),
                 ),
                 onPressed: () {},
-                child: const Text("LOGIN"),
+                child: const Text("SIGNUP"),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    "Don't have an account?",
+                    "Already have an account?",
                   ),
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                          builder: (context) => const SignupPage(),
+                          builder: (context) => const LoginPage(),
                         ),
                       );
                     },
-                    child: const Text("Sign up now."),
+                    child: const Text("Login"),
                   ),
                 ],
               ),
