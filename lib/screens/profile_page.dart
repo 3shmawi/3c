@@ -20,13 +20,30 @@ class ProfilePage extends StatelessWidget {
               actions: [
                 IconButton(
                   icon: const Icon(Icons.refresh),
-                  onPressed: () {},
+                  onPressed: () {
+                    cubit.getData();
+                  },
                 ),
               ],
             ),
             body: Center(
               child: state is UserLoadingState
-                  ? const CircularProgressIndicator()
+                  ? const Card(
+                      elevation: 15,
+                      child: Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(height: 10),
+                            CircularProgressIndicator(),
+                            SizedBox(height: 10),
+                            Text("Loading data..."),
+                          ],
+                        ),
+                      ),
+                    )
                   : Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ListView(
@@ -36,26 +53,29 @@ class ProfilePage extends StatelessWidget {
                             backgroundColor: Colors.deepPurple,
                             child: CircleAvatar(
                               radius: 60,
+                              backgroundImage: NetworkImage(
+                                cubit.user!.results!.first.picture!.medium!,
+                              ),
                             ),
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           Text(
-                            "${cubit.user!.results![0].name!.title} ${cubit.user!.results![0].name!.first}",
+                            "${cubit.user!.results![0].name!.title}: ${cubit.user!.results![0].name!.first} ${cubit.user!.results![0].name!.last}",
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: 24,
                             ),
                           ),
                           Text(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vulputate, tortor non consectetur tincidunt, justo lectus eleifend felis, a tempor velit lectus sed ex. Donec viverra, neque ac vulputate mattis, mi nulla dictum urna, ac tristique arcu arcu nec velit. In non est in urna consectetur molestie. Nulla facilisi. Donec vel neque at ex placerat placerat",
+                            cubit.user!.results!.first.login!.username!,
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               color: Colors.grey,
                             ),
                           ),
-                          Row(
+                          const Row(
                             children: [
                               Expanded(
                                 child: Divider(
@@ -72,12 +92,12 @@ class ProfilePage extends StatelessWidget {
                           ),
                           Card(
                             child: ListTile(
-                              title: Text("EMAIL ADDRESS"),
-                              trailing: Icon(Icons.arrow_right),
+                              title: Text(cubit.user!.results!.first.email!),
+                              trailing: const Icon(Icons.arrow_right),
                             ),
                           ),
-                          SizedBox(height: 20),
-                          Row(
+                          const SizedBox(height: 20),
+                          const Row(
                             children: [
                               Expanded(
                                 child: Divider(
@@ -86,20 +106,21 @@ class ProfilePage extends StatelessWidget {
                               ),
                               Text(" Phone number "),
                               Expanded(
-                                  flex: 6,
-                                  child: Divider(
-                                    color: Colors.cyan,
-                                  )),
+                                flex: 6,
+                                child: Divider(
+                                  color: Colors.cyan,
+                                ),
+                              ),
                             ],
                           ),
                           Card(
                             child: ListTile(
-                              title: Text("PHONE NUMBER"),
-                              trailing: Icon(Icons.arrow_right),
+                              title: Text(cubit.user!.results!.first.phone!),
+                              trailing: const Icon(Icons.arrow_right),
                             ),
                           ),
-                          SizedBox(height: 20),
-                          Row(
+                          const SizedBox(height: 20),
+                          const Row(
                             children: [
                               Expanded(
                                 child: Divider(
@@ -108,20 +129,22 @@ class ProfilePage extends StatelessWidget {
                               ),
                               Text(" Country "),
                               Expanded(
-                                  flex: 6,
-                                  child: Divider(
-                                    color: Colors.cyan,
-                                  )),
+                                flex: 6,
+                                child: Divider(
+                                  color: Colors.cyan,
+                                ),
+                              ),
                             ],
                           ),
                           Card(
                             child: ListTile(
-                              title: Text("COUNTRY"),
-                              trailing: Icon(Icons.arrow_right),
+                              title: Text(cubit
+                                  .user!.results!.first.location!.country!),
+                              trailing: const Icon(Icons.arrow_right),
                             ),
                           ),
-                          SizedBox(height: 20),
-                          Row(
+                          const SizedBox(height: 20),
+                          const Row(
                             children: [
                               Expanded(
                                 child: Divider(
@@ -138,12 +161,13 @@ class ProfilePage extends StatelessWidget {
                           ),
                           Card(
                             child: ListTile(
-                              title: Text("STATE"),
-                              trailing: Icon(Icons.arrow_right),
+                              title: Text(
+                                  cubit.user!.results!.first.location!.state!),
+                              trailing: const Icon(Icons.arrow_right),
                             ),
                           ),
-                          SizedBox(height: 20),
-                          Row(
+                          const SizedBox(height: 20),
+                          const Row(
                             children: [
                               Expanded(
                                 child: Divider(
@@ -160,11 +184,14 @@ class ProfilePage extends StatelessWidget {
                           ),
                           Card(
                             child: ListTile(
-                              title: Text("STREET"),
-                              trailing: Icon(Icons.arrow_right),
+                              title: Text(
+                                cubit.user!.results!.first.location!.street!
+                                    .name!,
+                              ),
+                              trailing: const Icon(Icons.arrow_right),
                             ),
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                         ],
                       ),
                     ),
