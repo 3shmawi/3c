@@ -44,157 +44,159 @@ class ProfilePage extends StatelessWidget {
                         ),
                       ),
                     )
-                  : Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ListView(
-                        children: [
-                          CircleAvatar(
-                            radius: 64,
-                            backgroundColor: Colors.deepPurple,
-                            child: CircleAvatar(
-                              radius: 60,
-                              backgroundImage: NetworkImage(
-                                cubit.user!.results!.first.picture!.medium!,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            "${cubit.user!.results![0].name!.title}: ${cubit.user!.results![0].name!.first} ${cubit.user!.results![0].name!.last}",
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 24,
-                            ),
-                          ),
-                          Text(
-                            cubit.user!.results!.first.login!.username!,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          const Row(
-                            children: [
-                              Expanded(
-                                child: Divider(
-                                  color: Colors.cyan,
+                  : Builder(builder: (context) {
+                      final user = cubit.user!.results!.first;
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListView(
+                          children: [
+                            CircleAvatar(
+                              radius: 64,
+                              backgroundColor: Colors.deepPurple,
+                              child: CircleAvatar(
+                                radius: 60,
+                                backgroundImage: NetworkImage(
+                                  user.picture!.medium!,
                                 ),
                               ),
-                              Text(" Email address "),
-                              Expanded(
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              "${user.name!.title}: ${user.name!.first} ${user.name!.last}",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 24,
+                              ),
+                            ),
+                            Text(
+                              user.login!.username!,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            const Row(
+                              children: [
+                                Expanded(
+                                  child: Divider(
+                                    color: Colors.cyan,
+                                  ),
+                                ),
+                                Text(" Email address "),
+                                Expanded(
+                                    flex: 6,
+                                    child: Divider(
+                                      color: Colors.cyan,
+                                    )),
+                              ],
+                            ),
+                            Card(
+                              child: ListTile(
+                                title: Text(user.email!),
+                                trailing: const Icon(Icons.arrow_right),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            const Row(
+                              children: [
+                                Expanded(
+                                  child: Divider(
+                                    color: Colors.cyan,
+                                  ),
+                                ),
+                                Text(" Phone number "),
+                                Expanded(
                                   flex: 6,
                                   child: Divider(
                                     color: Colors.cyan,
-                                  )),
-                            ],
-                          ),
-                          Card(
-                            child: ListTile(
-                              title: Text(cubit.user!.results!.first.email!),
-                              trailing: const Icon(Icons.arrow_right),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                          const Row(
-                            children: [
-                              Expanded(
-                                child: Divider(
-                                  color: Colors.cyan,
-                                ),
+                            Card(
+                              child: ListTile(
+                                title: Text(user.phone!),
+                                trailing: const Icon(Icons.arrow_right),
                               ),
-                              Text(" Phone number "),
-                              Expanded(
-                                flex: 6,
-                                child: Divider(
-                                  color: Colors.cyan,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Card(
-                            child: ListTile(
-                              title: Text(cubit.user!.results!.first.phone!),
-                              trailing: const Icon(Icons.arrow_right),
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                          const Row(
-                            children: [
-                              Expanded(
-                                child: Divider(
-                                  color: Colors.cyan,
+                            const SizedBox(height: 20),
+                            const Row(
+                              children: [
+                                Expanded(
+                                  child: Divider(
+                                    color: Colors.cyan,
+                                  ),
                                 ),
-                              ),
-                              Text(" Country "),
-                              Expanded(
-                                flex: 6,
-                                child: Divider(
-                                  color: Colors.cyan,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Card(
-                            child: ListTile(
-                              title: Text(cubit
-                                  .user!.results!.first.location!.country!),
-                              trailing: const Icon(Icons.arrow_right),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          const Row(
-                            children: [
-                              Expanded(
-                                child: Divider(
-                                  color: Colors.cyan,
-                                ),
-                              ),
-                              Text(" State "),
-                              Expanded(
+                                Text(" Country "),
+                                Expanded(
                                   flex: 6,
                                   child: Divider(
                                     color: Colors.cyan,
-                                  )),
-                            ],
-                          ),
-                          Card(
-                            child: ListTile(
-                              title: Text(
-                                  cubit.user!.results!.first.location!.state!),
-                              trailing: const Icon(Icons.arrow_right),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          const Row(
-                            children: [
-                              Expanded(
-                                child: Divider(
-                                  color: Colors.cyan,
+                                  ),
                                 ),
+                              ],
+                            ),
+                            Card(
+                              child: ListTile(
+                                title: Text(cubit
+                                    .user!.results!.first.location!.country!),
+                                trailing: const Icon(Icons.arrow_right),
                               ),
-                              Text(" Street "),
-                              Expanded(
-                                  flex: 6,
+                            ),
+                            const SizedBox(height: 20),
+                            const Row(
+                              children: [
+                                Expanded(
                                   child: Divider(
                                     color: Colors.cyan,
-                                  )),
-                            ],
-                          ),
-                          Card(
-                            child: ListTile(
-                              title: Text(
-                                cubit.user!.results!.first.location!.street!
-                                    .name!,
-                              ),
-                              trailing: const Icon(Icons.arrow_right),
+                                  ),
+                                ),
+                                Text(" State "),
+                                Expanded(
+                                    flex: 6,
+                                    child: Divider(
+                                      color: Colors.cyan,
+                                    )),
+                              ],
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                        ],
-                      ),
-                    ),
+                            Card(
+                              child: ListTile(
+                                title: Text(cubit
+                                    .user!.results!.first.location!.state!),
+                                trailing: const Icon(Icons.arrow_right),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            const Row(
+                              children: [
+                                Expanded(
+                                  child: Divider(
+                                    color: Colors.cyan,
+                                  ),
+                                ),
+                                Text(" Street "),
+                                Expanded(
+                                    flex: 6,
+                                    child: Divider(
+                                      color: Colors.cyan,
+                                    )),
+                              ],
+                            ),
+                            Card(
+                              child: ListTile(
+                                title: Text(
+                                  user.location!.street!.name!,
+                                ),
+                                trailing: const Icon(Icons.arrow_right),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                          ],
+                        ),
+                      );
+                    }),
             ),
           );
         },
