@@ -29,15 +29,15 @@ class CounterPage extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocBuilder<CounterCtrl, int>(
+      body: BlocBuilder<Ctrl, AppCtrlStates>(
         builder: (context, state) {
-          final cubit = context.read<CounterCtrl>();
+          final cubit = context.read<Ctrl>();
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "$state",
+                  _counter(cubit.counter),
                   style: const TextStyle(
                     color: Colors.cyan,
                     fontSize: 60,
@@ -83,5 +83,12 @@ class CounterPage extends StatelessWidget {
         },
       ),
     );
+  }
+
+  String _counter(int counter) {
+    if (counter.toString().length == 1) {
+      return "0$counter";
+    }
+    return counter.toString();
   }
 }

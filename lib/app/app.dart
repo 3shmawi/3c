@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_children_course/view_model/counter_ctrl.dart';
 import 'package:flutter_children_course/view_model/theme_ctrl.dart';
 
-import '../views/counter_page.dart';
+import '../view_model/population_ctrl.dart';
+import '../views/api/usa_population.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -14,6 +15,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<CounterCtrl>(create: (context) => CounterCtrl()),
         BlocProvider<ThemeCtrl>(create: (context) => ThemeCtrl()),
+        BlocProvider<Ctrl>(create: (context) => Ctrl()),
+        BlocProvider<PopulationCtrl>(
+            create: (context) => PopulationCtrl()..getUsaPopulation()),
       ],
       child: BlocBuilder<ThemeCtrl, bool>(
         builder: (context, state) {
@@ -32,7 +36,7 @@ class MyApp extends StatelessWidget {
             ),
             themeMode: state ? ThemeMode.dark : ThemeMode.light,
             debugShowCheckedModeBanner: false,
-            home: const CounterPage(),
+            home: const UsaPopulation(),
           );
         },
       ),
