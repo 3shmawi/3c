@@ -14,10 +14,12 @@ class CountriesCtrl extends Cubit<CountriesStates> {
     emit(CountriesLoading());
     _dio.get('https://restcountries.com/v3.1/all').then((response) {
       data.clear();
-      for (var item in response.data) {
-        data.add(CountryModel.fromJson(item));
+      for (int i = 0; i < response.data.length; i++) {
+        data.add(CountryModel.fromJson(response.data[i]));
       }
+      data.sort((a, b) => a.name!.common!.compareTo(b.name!.common!));
 
+      // countries.sort();
       emit(CountriesSuccess());
     }).catchError((error) {
       emit(CountriesError());
@@ -30,6 +32,8 @@ class CountriesCtrl extends Cubit<CountriesStates> {
         .where((country) =>
             country.name!.common!.toLowerCase().contains(query.toLowerCase()))
         .toList();
+    filteredData.sort((a, b) => a.name!.common!.compareTo(b.name!.common!));
+
     emit(CountriesSuccess());
   }
 }
