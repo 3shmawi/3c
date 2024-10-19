@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_children_course/view_model/counter_ctrl.dart';
-import 'package:flutter_children_course/view_model/country_ctrl.dart';
 import 'package:flutter_children_course/view_model/theme_ctrl.dart';
+import 'package:flutter_children_course/views/api/countries.dart';
 
+import '../view_model/country_ctrl.dart';
 import '../view_model/population_ctrl.dart';
-import '../views/api/countries.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
         builder: (context, state) {
           return MaterialApp(
             theme: ThemeData(
+              useMaterial3: true,
               primaryColor: Colors.cyan,
               colorScheme: const ColorScheme.light(
                 primary: Colors.cyan,

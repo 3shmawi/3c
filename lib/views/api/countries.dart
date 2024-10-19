@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_children_course/model/country.dart';
 import 'package:flutter_children_course/view_model/country_ctrl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 //url launcher
 class CountriesView extends StatelessWidget {
@@ -57,12 +58,16 @@ class BottomSheet extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 10),
           child: TextField(
+            controller: context.read<CountryCtrl>().searchCtrl,
             onChanged: (value) {
-              context.read<CountryCtrl>().search(value);
+              context.read<CountryCtrl>().search();
             },
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
               labelText: 'Search for a country',
             ),
           ),
@@ -70,7 +75,13 @@ class BottomSheet extends StatelessWidget {
         Expanded(
           child: BlocBuilder<CountryCtrl, CountryStates>(
             builder: (context, state) {
-              final countries = context.read<CountryCtrl>().results;
+              final countries =
+                  context.read<CountryCtrl>().searchCtrl.text.isEmpty
+                      ? context.read<CountryCtrl>().data
+                      : context.read<CountryCtrl>().results;
+              if (countries.isEmpty) {
+                return const Center(child: Text('No results found'));
+              }
               return ListView.separated(
                 itemCount: countries.length,
                 itemBuilder: (context, index) => _Item(countries[index]),
@@ -98,6 +109,9 @@ class _Item extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListTile(
+          onTap: () {
+            _launchUrl(country.mapUrl);
+          },
           subtitle: Text(
             country.mapUrl,
             style: const TextStyle(
@@ -113,4 +127,13 @@ class _Item extends StatelessWidget {
       ),
     );
   }
+
+  Future<void> _launchUrl(String u) async {
+    final Uri url = Uri.parse(u);
+
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch $u');
+    }
+  }
 }
+//

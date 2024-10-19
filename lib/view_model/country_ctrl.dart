@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_children_course/model/country.dart';
 
 class CountryCtrl extends Cubit<CountryStates> {
   CountryCtrl() : super(CountryInitialState());
-
+//super   for   father    and this for    current scope
   final _dio = Dio();
 
   List<CountryModel> data = [];
@@ -27,11 +28,12 @@ class CountryCtrl extends Cubit<CountryStates> {
     });
   }
 
-  void search(String word) {
+  final searchCtrl = TextEditingController();
+  void search() {
     emit(CountryDataLoading());
     results = data
         .where((country) =>
-            country.name.toLowerCase().contains(word.toLowerCase()))
+            country.name.toLowerCase().contains(searchCtrl.text.toLowerCase()))
         .toList();
     emit(CountryDataLoaded());
   }
