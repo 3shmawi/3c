@@ -47,3 +47,14 @@ class CountriesLoading extends CountriesStates {}
 class CountriesSuccess extends CountriesStates {}
 
 class CountriesError extends CountriesStates {}
+/*
+
+{
+  "name": "Mohamed",
+  "age": 30,
+  "gender": "Male",
+  "country": "Egypt"
+}
+
+
+ */
