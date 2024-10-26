@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_children_course/app/usecase.dart';
 import 'package:flutter_children_course/model/country.dart';
 import 'package:flutter_children_course/view_model/country_ctrl.dart';
+import 'package:flutter_children_course/view_model/theme_ctrl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 //url launcher
@@ -20,22 +22,54 @@ class CountriesView extends StatelessWidget {
             onPressed: () {
               context.read<CountryCtrl>().getData();
             },
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(
+              Icons.refresh,
+              color: Colors.cyan,
+            ),
+          ),
+          const Icon(
+            CupertinoIcons.sun_max_fill,
+            color: Colors.yellowAccent,
+          ),
+          BlocBuilder<ThemeCtrl, bool>(
+            builder: (context, isDark) {
+              return CupertinoSwitch(
+                activeColor: Colors.black,
+                thumbColor: Colors.cyanAccent,
+                trackColor: Colors.yellowAccent,
+                value: isDark,
+                onChanged: (v) {
+                  context.read<ThemeCtrl>().toggleTheme();
+                },
+              );
+            },
+          ),
+          const Icon(
+            CupertinoIcons.moon_stars_fill,
+            color: Colors.black,
           )
         ],
       ),
       body: BlocBuilder<CountryCtrl, CountryStates>(
         builder: (context, state) {
-          final countries = context.read<CountryCtrl>().data;
           if (state is CountryDataLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const AppStatus(CaseStates.loading);
           }
-          return ListView.separated(
+          if (state is CountryDataFailed) {
+            return AppStatus(
+              CaseStates.failure,
+              errorText: state.error,
+            );
+          }
+          final countries = context.read<CountryCtrl>().data;
+
+          if (countries.isEmpty) {
+            return const AppStatus(CaseStates.empty);
+          }
+
+          return ListView.builder(
             itemCount: countries.length,
             itemBuilder: (context, index) => _Item(countries[index]),
-            separatorBuilder: (context, index) => const Divider(
-              color: Colors.cyan,
-            ),
           );
         },
       ),
@@ -104,24 +138,34 @@ class _Item extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 10,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListTile(
-          onTap: () {
-            _launchUrl(country.mapUrl);
-          },
-          subtitle: Text(
-            country.mapUrl,
-            style: const TextStyle(
-              color: Colors.blue,
+    final theme = Theme.of(context).dividerColor;
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.cyan, width: 2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Card(
+        margin: EdgeInsets.zero,
+        elevation: 20,
+        shadowColor: theme,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListTile(
+            onTap: () {
+              _launchUrl(country.mapUrl);
+            },
+            subtitle: Text(
+              country.mapUrl,
+              style: const TextStyle(
+                color: Colors.blue,
+              ),
             ),
-          ),
-          title: Text(country.name),
-          trailing: Image.network(
-            country.flag,
-            width: 40,
+            title: Text(country.name),
+            trailing: Image.network(
+              country.flag,
+              width: 40,
+            ),
           ),
         ),
       ),

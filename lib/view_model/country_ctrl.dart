@@ -23,7 +23,7 @@ class CountryCtrl extends Cubit<CountryStates> {
       data.sort((a, b) => a.name.compareTo(b.name));
       emit(CountryDataLoaded());
     }).catchError((error) {
-      emit(CountryDataFailed());
+      emit(CountryDataFailed(error.toString()));
       print('Failed to load data: $error');
     });
   }
@@ -47,4 +47,7 @@ class CountryDataLoading extends CountryStates {}
 
 class CountryDataLoaded extends CountryStates {}
 
-class CountryDataFailed extends CountryStates {}
+class CountryDataFailed extends CountryStates {
+  final String error;
+  CountryDataFailed(this.error);
+}
