@@ -7,15 +7,15 @@ import 'package:flutter_children_course/model/EveryThingNews.dart';
 class NewsCtrl extends Cubit<NewsStates> {
   NewsCtrl() : super(NewsInitialState());
 
-  String category = AppConstants.newsCategories.first;
-  String country = AppConstants.countryCodes.first;
+  int currentIndex = 0;
+  Map<String, dynamic> country = AppConstants.countries.first;
 
-  void setCategory(String category) {
-    this.category = category;
+  void setCategory(int index) {
+    currentIndex = index;
     fetchNews();
   }
 
-  void setCountry(String country) {
+  void setCountry(Map<String, dynamic> country) {
     this.country = country;
     fetchNews();
   }
@@ -29,17 +29,20 @@ class NewsCtrl extends Cubit<NewsStates> {
     emit(NewsLoadingState());
     _dio
         .get(AppConstants.topHeadLineApi(
-      category: category,
-      country: country,
+      category: AppConstants.newsCategories[currentIndex],
+      country: country['code'].toLowerCase(),
     ))
         .then((response) {
       final json = response.data;
+      print(json);
       if (json['articles'] != null) {
         articles = [];
         json['articles'].forEach((v) {
           articles.add(Articles.fromJson(v));
         });
       }
+      print(articles.length);
+      print(articles.first.title);
       emit(NewsDataState());
     }).catchError((error) {
       emit(NewsErrorState());
