@@ -8,11 +8,41 @@ import 'package:flutter_children_course/view_model/theme_ctrl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 //url launcher
-class CountriesView extends StatelessWidget {
+class CountriesView extends StatefulWidget {
   const CountriesView({super.key});
 
   @override
+  State<CountriesView> createState() => _CountriesViewState();
+}
+
+class _CountriesViewState extends State<CountriesView> {
+  final ScrollController _scrollController = ScrollController();
+  int highlightedIndex = -1;
+
+  void scrollToItem(int index) {
+    setState(() {
+      highlightedIndex = index; // Set the highlighted index
+    });
+
+    // Animate to the item's position in the list
+    _scrollController.animateTo(
+      index * 90.0, // Assuming each item has a height of 50.0
+      duration: const Duration(seconds: 1),
+      curve: Curves.easeInOut,
+    );
+
+    // Remove the highlight after 1 second
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        highlightedIndex = -1; // Reset highlight
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan,
@@ -68,19 +98,28 @@ class CountriesView extends StatelessWidget {
           }
 
           return ListView.builder(
+            controller: _scrollController,
             itemCount: countries.length,
-            itemBuilder: (context, index) => _Item(countries[index]),
+            itemBuilder: (context, index) => _Item(countries[index], false,
+                highlightedIndex == index ? Colors.cyan : theme.dividerColor),
           );
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showModalBottomSheet(
+        onPressed: () async {
+          final index = await showModalBottomSheet(
               context: context, builder: (context) => const BottomSheet());
+          scrollToItem(index);
         },
         child: const Icon(CupertinoIcons.search),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 }
 
@@ -89,6 +128,8 @@ class BottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).dividerColor;
+
     return Column(
       children: [
         Padding(
@@ -118,7 +159,8 @@ class BottomSheet extends StatelessWidget {
               }
               return ListView.separated(
                 itemCount: countries.length,
-                itemBuilder: (context, index) => _Item(countries[index]),
+                itemBuilder: (context, index) =>
+                    _Item(countries[index], true, theme),
                 separatorBuilder: (context, index) => const Divider(
                   color: Colors.cyan,
                 ),
@@ -132,42 +174,56 @@ class BottomSheet extends StatelessWidget {
 }
 
 class _Item extends StatelessWidget {
-  const _Item(this.country);
+  const _Item(this.country, this.isBottomSheet, this.shadowColor);
 
   final CountryModel country;
+  final bool isBottomSheet;
+  final Color shadowColor;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context).dividerColor;
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.cyan, width: 2),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Card(
-        margin: EdgeInsets.zero,
-        elevation: 20,
-        shadowColor: theme,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListTile(
-            onTap: () {
-              _launchUrl(country.mapUrl);
-            },
-            subtitle: Text(
-              country.mapUrl,
-              style: const TextStyle(
-                color: Colors.blue,
+    return GestureDetector(
+      onTap: () {
+        if (isBottomSheet) {
+          Navigator.of(context)
+              .pop(context.read<CountryCtrl>().getIndex(country.name));
+        } else {
+          _launchUrl(country.mapUrl);
+        }
+      },
+      child: Stack(
+        children: [
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            height: 90,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.cyan, width: 2),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Card(
+              margin: EdgeInsets.zero,
+              elevation: 20,
+              shadowColor: shadowColor,
+              color: shadowColor == Colors.cyan ? Colors.white60 : null,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  subtitle: Text(
+                    country.mapUrl,
+                    style: const TextStyle(
+                      color: Colors.blue,
+                    ),
+                  ),
+                  title: Text(country.name),
+                  trailing: Image.network(
+                    country.flag,
+                    width: 40,
+                  ),
+                ),
               ),
             ),
-            title: Text(country.name),
-            trailing: Image.network(
-              country.flag,
-              width: 40,
-            ),
           ),
-        ),
+        ],
       ),
     );
   }

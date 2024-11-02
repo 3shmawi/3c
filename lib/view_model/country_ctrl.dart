@@ -37,6 +37,11 @@ class CountryCtrl extends Cubit<CountryStates> {
         .toList();
     emit(CountryDataLoaded());
   }
+
+  int getIndex(String country) {
+    return data.indexOf(
+        data.firstWhere((c) => c.name.toLowerCase() == country.toLowerCase()));
+  }
 }
 
 abstract class CountryStates {}
