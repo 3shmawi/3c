@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_children_course/app/constants.dart';
+import 'package:flutter_children_course/app/usecase.dart';
 import 'package:flutter_children_course/ctrl/news.dart';
+import 'package:flutter_children_course/model/EveryThingNews.dart';
+
+part 'news_search.dart';
 
 class NewsScreen extends StatelessWidget {
   const NewsScreen({super.key});
@@ -99,78 +103,24 @@ class NewsScreen extends StatelessWidget {
               ),
             ],
           ),
-          body: ListView.builder(
-            itemBuilder: (context, index) => SizedBox(
-              height: 150,
-              child: Card(
-                margin: const EdgeInsets.all(8),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Flexible(
-                        child: Container(
-                          width: 150,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(
-                              color: Colors.cyan,
-                              width: 2,
-                            ),
-                            image: const DecorationImage(
-                              image: NetworkImage(
-                                "https://images.unsplash.com/photo-1729772164459-6dbe32e20510?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw1fHx8ZW58MHx8fHx8",
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 16.0),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Title',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Divider(
-                              color: Colors.cyan,
-                            ),
-                            Expanded(
-                              child: Text(
-                                'Description',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(fontSize: 16.0),
-                              ),
-                            ),
-                            SizedBox(height: 16.0),
-                            Divider(
-                              color: Colors.grey[300],
-                              height: 0,
-                            ),
-                            Text(
-                              'Published At',
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+          body: BlocBuilder<NewsCtrl, NewsStates>(
+            builder: (context, state) {
+              final cubit = context.read<NewsCtrl>();
+              if (state is NewsLoadingState) {
+                return const UseCaseBuild(UseCase.loading);
+              }
+              if (state is NewsErrorState) {
+                return const UseCaseBuild(UseCase.error);
+              }
+              if (cubit.articles.isEmpty) {
+                return const UseCaseBuild(UseCase.empty);
+              }
+              return ListView.builder(
+                itemBuilder: (context, index) =>
+                    _NewsItem(cubit.articles[index]),
+                itemCount: cubit.articles.length,
+              );
+            },
           ),
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: cubit.currentIndex,
@@ -183,10 +133,21 @@ class NewsScreen extends StatelessWidget {
               (index) {
                 return BottomNavigationBarItem(
                   icon: Icon(AppConstants.newsCategoriesIcon[index]),
-                  label: AppConstants.newsCategories[index].toUpperCase(),
+                  label:
+                      "${AppConstants.newsCategories[index][0].toUpperCase()}${AppConstants.newsCategories[index].substring(1)}",
                 );
               },
             ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const NewsSearch(),
+                ),
+              );
+            },
+            child: const Icon(Icons.search),
           ),
         );
       },
@@ -207,5 +168,87 @@ class NewsScreen extends StatelessWidget {
     final double lineHeight = textPainter.preferredLineHeight;
     final int lineCount = (textPainter.size.height / lineHeight).ceil();
     return lineCount;
+  }
+}
+
+class _NewsItem extends StatelessWidget {
+  const _NewsItem(this.article);
+
+  final Articles article;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 150,
+      child: Card(
+        margin: const EdgeInsets.all(8),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (article.urlToImage != null)
+                Flexible(
+                  child: Container(
+                    width: 150,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(
+                        color: Colors.cyan,
+                        width: 2,
+                      ),
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          article.urlToImage,
+                        ),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              const SizedBox(width: 16.0),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      article.title ?? article.author!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Divider(
+                      color: Colors.cyan,
+                    ),
+                    Expanded(
+                      child: Text(
+                        article.content ?? article.description ?? "",
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 16.0),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    Divider(
+                      color: Colors.grey[300],
+                      height: 0,
+                    ),
+                    Text(
+                      article.publishedAt!,
+                      style: const TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

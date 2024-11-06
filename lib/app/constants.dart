@@ -11,6 +11,7 @@ abstract class AppConstants {
       "$_baseUrl/top-headlines?country=$country&category=$category&apiKey=$_apiKey";
 
   static const List<Map<String, String>> countries = [
+    {"code": "US", "name": "United States", "flag": "🇺🇸"},
     {"code": "AE", "name": "United Arab Emirates", "flag": "🇦🇪"},
     {"code": "AR", "name": "Argentina", "flag": "🇦🇷"},
     {"code": "AT", "name": "Austria", "flag": "🇦🇹"},
@@ -60,7 +61,6 @@ abstract class AppConstants {
     {"code": "TR", "name": "Turkey", "flag": "🇹🇷"},
     {"code": "TW", "name": "Taiwan", "flag": "🇹🇼"},
     {"code": "UA", "name": "Ukraine", "flag": "🇺🇦"},
-    {"code": "US", "name": "United States", "flag": "🇺🇸"},
     {"code": "VE", "name": "Venezuela", "flag": "🇻🇪"},
     {"code": "ZA", "name": "South Africa", "flag": "🇿🇦"},
   ];

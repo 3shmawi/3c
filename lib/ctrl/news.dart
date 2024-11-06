@@ -30,7 +30,7 @@ class NewsCtrl extends Cubit<NewsStates> {
     _dio
         .get(AppConstants.topHeadLineApi(
       category: AppConstants.newsCategories[currentIndex],
-      country: country['code'].toLowerCase(),
+      country: country['code'],
     ))
         .then((response) {
       final json = response.data;
@@ -42,11 +42,11 @@ class NewsCtrl extends Cubit<NewsStates> {
         });
       }
       print(articles.length);
-      print(articles.first.title);
       emit(NewsDataState());
     }).catchError((error) {
       emit(NewsErrorState());
       print('Error: $error');
+      throw error;
     });
   }
 
@@ -67,6 +67,12 @@ class NewsCtrl extends Cubit<NewsStates> {
       emit(NewsErrorState());
       print('Error: $error');
     });
+  }
+
+  void clearData() {
+    searchResults = [];
+    searchCtrl.clear();
+    emit(NewsDataState());
   }
 }
 
