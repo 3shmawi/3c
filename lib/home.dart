@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-//stless
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -58,32 +57,32 @@ class HomePage extends StatelessWidget {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            gradient: LinearGradient(
-              colors: [
-                Colors.cyan,
-                Colors.black.withOpacity(.7),
-              ],
-              begin: AlignmentDirectional.bottomCenter,
-              end: AlignmentDirectional.centerStart,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(.3),
-                blurRadius: 5,
-                offset: const Offset(40, 30),
-              ),
-              BoxShadow(
-                color: Colors.black.withOpacity(.3),
-                blurRadius: 5,
-                offset: const Offset(-40, -30),
-              ),
-            ],
+            // gradient: LinearGradient(
+            //   colors: [
+            //     Colors.cyan,
+            //     Colors.black.withOpacity(.7),
+            //   ],
+            //   begin: AlignmentDirectional.bottomCenter,
+            //   end: AlignmentDirectional.centerStart,
+            // ),
+            // boxShadow: [
+            //   BoxShadow(
+            //     color: Colors.black.withOpacity(.3),
+            //     blurRadius: 5,
+            //     offset: const Offset(40, 30),
+            //   ),
+            //   BoxShadow(
+            //     color: Colors.black.withOpacity(.3),
+            //     blurRadius: 5,
+            //     offset: const Offset(-40, -30),
+            //   ),
+            // ],
           ),
           child: Expanded(
             child: Container(
               padding: const EdgeInsets.all(20),
+              color: Colors.cyan,
               decoration: BoxDecoration(
-                color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
