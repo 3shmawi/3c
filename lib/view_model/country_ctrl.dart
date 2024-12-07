@@ -7,15 +7,29 @@ class CountryCtrl extends Cubit<CountryStates> {
   CountryCtrl() : super(CountryInitialState());
 
 //super   for   father    and this for    current scope
-  final _dio = Dio();
+  final _dio = Dio(
+    BaseOptions(
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      connectTimeout: const Duration(seconds: 15),
+      receiveTimeout: const Duration(seconds: 15),
+      followRedirects: true,
+
+      receiveDataWhenStatusError: true,
+      baseUrl:
+          'https://restcountries.com/v3.1/all', // Replace with your API endpoint
+    ),
+  );
 
   List<CountryModel> data = [];
   List<CountryModel> results = [];
   Map<String, int> alphabetIndex = {};
 
-  void getData() {
-    emit(CountryDataLoading());
-    _dio.get('https://restcountries.com/v3.1/all').then((response) {
+  void getData() async {
+    try {
+      emit(CountryDataLoading());
+      final response = await _dio.get('');
       final countries = response.data;
       data.clear();
       for (int i = 0; i < countries.length; i++) {
@@ -31,11 +45,10 @@ class CountryCtrl extends Cubit<CountryStates> {
         }
       }
       emit(CountryDataLoaded());
-    }).catchError((error) {
+    } catch (error) {
       emit(CountryDataFailed(error.toString()));
-      print('Failed to load data: $error');
-      throw error;
-    });
+      rethrow;
+    }
   }
 
   final searchCtrl = TextEditingController();

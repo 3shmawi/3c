@@ -47,36 +47,36 @@ class _CountriesViewState extends State<CountriesView> {
 
   int selectedAlphabetIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_onScroll); // Add listener
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _scrollController.addListener(_onScroll); // Add listener
+  // }
 
-  void _onScroll() {
-    // Find the closest alphabet index based on scroll position
-    int closestIndex = 0;
-    double minDistance = double.infinity;
-
-    final cubit = context.read<CountryCtrl>();
-    for (var entry in cubit.alphabetIndex.entries) {
-      int index = entry.value;
-      double offset = index * 90.0; // Approximate height of each section
-      double distance = (_scrollController.offset - offset).abs();
-
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestIndex = cubit.alphabetIndex.keys.toList().indexOf(entry.key);
-      }
-    }
-
-    // Update selected alphabet index if it has changed
-    if (selectedAlphabetIndex != closestIndex) {
-      setState(() {
-        selectedAlphabetIndex = closestIndex;
-      });
-    }
-  }
+  // void _onScroll() {
+  //   // Find the closest alphabet index based on scroll position
+  //   int closestIndex = 0;
+  //   double minDistance = double.infinity;
+  //
+  //   final cubit = context.read<CountryCtrl>();
+  //   for (var entry in cubit.alphabetIndex.entries) {
+  //     int index = entry.value;
+  //     double offset = index * 90.0; // Approximate height of each section
+  //     double distance = (_scrollController.offset - offset).abs();
+  //
+  //     if (distance < minDistance) {
+  //       minDistance = distance;
+  //       closestIndex = cubit.alphabetIndex.keys.toList().indexOf(entry.key);
+  //     }
+  //   }
+  //
+  //   // Update selected alphabet index if it has changed
+  //   if (selectedAlphabetIndex != closestIndex) {
+  //     setState(() {
+  //       selectedAlphabetIndex = closestIndex;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -168,6 +168,11 @@ class _CountriesViewState extends State<CountriesView> {
                     ),
                   ),
                 ),
+              ),
+              Divider(
+                color: Colors.cyan,
+                height: 0,
+                thickness: 3,
               ),
               Expanded(
                 child: Scrollbar(

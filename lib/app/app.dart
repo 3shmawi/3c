@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_children_course/view_model/counter_ctrl.dart';
 import 'package:flutter_children_course/view_model/theme_ctrl.dart';
+import 'package:flutter_children_course/views/api/countries.dart';
 
 import '../view_model/country_ctrl.dart';
 import '../view_model/population_ctrl.dart';
-import '../views/M_A/chat.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -38,9 +38,9 @@ class MyApp extends StatelessWidget {
                 primary: Colors.cyan,
               ),
             ),
-            themeMode: !state ? ThemeMode.dark : ThemeMode.light,
+            themeMode: state ? ThemeMode.dark : ThemeMode.light,
             debugShowCheckedModeBanner: false,
-            home: const ChatView(),
+            home: const CountriesView(),
           );
         },
       ),
