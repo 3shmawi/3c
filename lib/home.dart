@@ -81,8 +81,8 @@ class HomePage extends StatelessWidget {
           child: Expanded(
             child: Container(
               padding: const EdgeInsets.all(20),
-              color: Colors.cyan,
               decoration: BoxDecoration(
+                color: Colors.cyan,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
